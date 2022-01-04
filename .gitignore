@@ -1,0 +1,13 @@
+/.next
+/lib
+
+/.yarn/*
+!/.yarn/sdks
+!/.yarn/releases
+!/.yarn/plugins
+/.pnp.*
+
+.rollup.cache
+*.tsbuildinfo
+
+/package.tgz

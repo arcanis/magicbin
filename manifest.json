@@ -1,0 +1,91 @@
+{
+  "title": "JSON Schema for Magic Bin configurations",
+  "$schema": "https://json-schema.org/draft/2019-09/schema#",
+  "__info": [
+    "This file contains the JSON Schema for the Magic Bin configuration files and is:",
+    "1) Hosted on the Yarn Website at http://yarnpkg.com/configuration/yarnrc.json",
+    "2) Registered on the SchemaStore catalog so that editors can offer autocompletion and validation.",
+    "3) Used to generate the documentation page at http://yarnpkg.com/configuration/yarnrc",
+
+    "Note: Properties prefixed with a single underscore (e.g. _exampleItems, _exampleKeys)",
+    "are unique to our documentation generation interpreter. All others will be picked up",
+    "by most JSON schema interpreters.",
+
+    "Rules:",
+    "1) Don't set a default if it's null, dynamic, or an object.",
+    "2) Use `examples` for scalars, `_exampleItems` for arrays, and `_exampleKeys` for objects.",
+    "3) Always add a _package property to each configuration setting."
+  ],
+  "type": "object",
+  "properties": {
+    "namespace": {
+      "description": "Namespace which will contain the tasks. Use different namespaces for different projects.",
+      "type": "string",
+      "examples": ["my-project"]
+    },
+    "description": {
+      "description": "Markdown string which will be used to document this namespace within the visual dashboard. You can also look into `descriptionFile` if you prefer to use a separate file.",
+      "type": "string",
+      "examples": ["Just some **very** basic demonstration tasks."]
+    },
+    "descriptionFile": {
+      "description": "Path to a markdown file which will be used to document this namepsace within the visual dashboard.",
+      "type": "string",
+      "examples": ["./README.md"]
+    },
+    "tasks": {
+      "description": "Tasks in your project. Each key will be used as task identifier.",
+      "type": "object",
+      "exampleKeys": ["myTask"],
+      "patternProperties": {
+        "^(.+)$": {
+          "type": "object",
+          "properties": {
+            "cwd": {
+              "type": "string",
+              "description": "Path in which the task must execute; can be a relative path, in which case it'll be resolved relative to the configuration file.",
+              "examples": ["./sources"]
+            },
+            "name": {
+              "type": "string",
+              "description": "Display name of the task. Unlike the task identifier, the display name has no impact on the command line parameters and is just there for formatting purposes.",
+              "examples": ["My First Task"]
+            },
+            "backBufferRows": {
+              "type": "number",
+              "description": "Maximal amount of rows that must be stored in the task backbuffer. As the task starts overflowing this buffer, the oldest data will start being removed.",
+              "examples": [100]
+            },
+            "rebootInterval": {
+              "type": "number",
+              "description": "How much time to wait in milliseconds before restarting the task.",
+              "examples": [5000]
+            },
+            "rebootOnSuccess": {
+              "type": "boolean",
+              "description": "If true, the task will be scheduled for restart even if it succeeds.",
+              "examples": [true]
+            },
+            "rebootOnFailure": {
+              "type": "boolean",
+              "description": "If true, the task will be scheduled for retry should it fail.",
+              "examples": [true]
+            },
+            "dependsOn": {
+              "type": "array",
+              "description": "List of tasks that must be successfully started before this one can be spawned.",
+              "items": {"type": "string"},
+              "exampleItems": ["someOtherTask"]
+            },
+            "confirmationMode": {
+              "type": "string",
+              "description": "Tasks aren't necessarily ready for consumption right after they started (for instance, they may need some time to start a web server, initiate database connections, etc). To avoid issues where dependencies would be spawned too early, Magic Bin lets you define a logic used to confirm that the task actually started.",
+              "enum": ["modern", "none"],
+              "examples": ["none"]
+            }
+          }
+        }
+      }
+    }
+  }
+}
